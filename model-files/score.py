@@ -1,10 +1,12 @@
 
+import pandas as pd
+import numpy as np
+
 from xgboost import XGBClassifier
 
 import json
 import os
-from cloudpickle import cloudpickle
-from functools import lru_cache
+import pickle
 
 import io
 import logging 
@@ -18,13 +20,13 @@ logger_feat.setLevel(logging.INFO)
 
 model_name = 'credit-scoring.pkl'
 
+# to enable/disable detailed logging
+DEBUG = True
 
 """
    Inference script. This script is used for prediction by scoring server when schema is known.
 """
 
-
-@lru_cache(maxsize=10)
 def load_model(model_file_name=model_name):
     """
     Loads model from the serialized format
@@ -41,11 +43,12 @@ def load_model(model_file_name=model_name):
     if model_file_name in contents:
         with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), model_file_name), "rb") as file:
             model = pickle.load(file) 
-            logger_pred.info("Loaded model...")
+            logger_pred.info("Loaded the model !!!")
        
     else:
         raise Exception('{0} is not found in model directory {1}'.format(model_file_name, model_dir))
-
+    
+    return model
 
 def pre_inference(data):
     """
@@ -60,7 +63,7 @@ def pre_inference(data):
     data: Data format after any processing.
 
     """
-    logger_pred.info("Eventually preprocessing and adding features...")
+    logger_pred.info("Preprocessing...")
     
     return data
 
@@ -77,7 +80,7 @@ def post_inference(yhat):
     yhat: Data format after any processing.
 
     """
-    logger_pred.info("Eventually preprocessing output...")
+    logger_pred.info("Postprocessing output...")
     
     return yhat
 
@@ -97,9 +100,23 @@ def predict(data, model=load_model()):
 
     """
     # model contains the model and the scaler
-    logger_pred.info("In predict...")
+    logger_pred.info("In function predict...")
     
     # some check
     assert model is not None, "Model is not loaded"
+    
+    logger_feat.info('Raw input is:')
+    logger_feat.info(data)
+    
+    x = pd.read_json(io.StringIO(data)).values
+    
+    if DEBUG:
+        logger_feat.info("Logging features")
+        logger_feat.info(x)
+    
+    # preprocess data (for example normalize features)
+    x = pre_inference(x)
+
+    logger_pred.info("Invoking model......")
     
     return {'prediction': [0,0,0,0]}
