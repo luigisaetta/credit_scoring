@@ -4,7 +4,7 @@ from cloudpickle import cloudpickle
 from functools import lru_cache
 
 
-model_name = 'credit-scoring.pkl'
+model_name = 'model.pkl'
 
 
 """
