@@ -1,10 +1,22 @@
+
+from xgboost import XGBClassifier
+
 import json
 import os
 from cloudpickle import cloudpickle
 from functools import lru_cache
 
+import io
+import logging 
 
-model_name = 'model.pkl'
+# logging configuration - OPTIONAL 
+logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger_pred = logging.getLogger('model-prediction')
+logger_pred.setLevel(logging.INFO)
+logger_feat = logging.getLogger('input-features')
+logger_feat.setLevel(logging.INFO)
+
+model_name = 'credit-scoring.pkl'
 
 
 """
@@ -23,9 +35,14 @@ def load_model(model_file_name=model_name):
     """
     model_dir = os.path.dirname(os.path.realpath(__file__))
     contents = os.listdir(model_dir)
+    
+    # Load the model from the model_dir using the appropriate loader
+    
     if model_file_name in contents:
         with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), model_file_name), "rb") as file:
-            return cloudpickle.load(file)
+            model = pickle.load(file) 
+            logger_pred.info("Loaded model...")
+       
     else:
         raise Exception('{0} is not found in model directory {1}'.format(model_file_name, model_dir))
 
@@ -43,6 +60,8 @@ def pre_inference(data):
     data: Data format after any processing.
 
     """
+    logger_pred.info("Eventually preprocessing and adding features...")
+    
     return data
 
 def post_inference(yhat):
@@ -58,6 +77,8 @@ def post_inference(yhat):
     yhat: Data format after any processing.
 
     """
+    logger_pred.info("Eventually preprocessing output...")
+    
     return yhat
 
 def predict(data, model=load_model()):
@@ -75,8 +96,10 @@ def predict(data, model=load_model()):
         Format: {'prediction': output from model.predict method}
 
     """
-    features = pre_inference(data)
-    yhat = post_inference(
-        model.predict(features)
-    )
-    return {'prediction': yhat}
+    # model contains the model and the scaler
+    logger_pred.info("In predict...")
+    
+    # some check
+    assert model is not None, "Model is not loaded"
+    
+    return {'prediction': [0,0,0,0]}
