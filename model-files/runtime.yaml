@@ -11,7 +11,7 @@ MODEL_PROVENANCE:
   TRAINING_CODE:
     ARTIFACT_DIRECTORY: ./model-files
     GIT_BRANCH: main
-    GIT_COMMIT: 7552d5f28dac89d7ca1546fe7c54b27c30bdc112
+    GIT_COMMIT: c366b6f12966c63d76678675dc3218b9537e7037
     GIT_REMOTE: https://github.com/luigisaetta/credit_scoring.git
   TRAINING_COMPARTMENT_OCID: ocid1.compartment.oc1..aaaaaaaag2cpni5qj6li5ny6ehuahhepbpveopobooayqfeudqygdtfe6h3a
   TRAINING_CONDA_ENV:

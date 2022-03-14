@@ -1,8 +1,8 @@
 #
 # OCI Data Science Model Deployment Client
 # Author: L. Saetta
-# version 1.1
-# date: 27/03/2021
+# version 2.0
+# date: 14/03/2022
 #
 import numpy as np
 import pandas as pd

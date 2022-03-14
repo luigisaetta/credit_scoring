@@ -19,6 +19,10 @@ logger_feat = logging.getLogger('input-features')
 logger_feat.setLevel(logging.INFO)
 
 model_name = 'credit-scoring.pkl'
+scaler_name = 'scaler.pkl'
+
+# scaler is global
+scaler = None
 
 # to enable/disable detailed logging
 DEBUG = True
@@ -35,6 +39,8 @@ def load_model(model_file_name=model_name):
     -------
     model:  a model instance on which predict API can be invoked
     """
+    global scaler
+    
     model_dir = os.path.dirname(os.path.realpath(__file__))
     contents = os.listdir(model_dir)
     
@@ -44,7 +50,11 @@ def load_model(model_file_name=model_name):
         with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), model_file_name), "rb") as file:
             model = pickle.load(file) 
             logger_pred.info("Loaded the model !!!")
-       
+            
+            with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), scaler_name), "rb") as file_sc:
+                scaler = pickle.load(file_sc)
+                logger_pred.info("Loaded the scaler !!!")
+                
     else:
         raise Exception('{0} is not found in model directory {1}'.format(model_file_name, model_dir))
     
@@ -64,6 +74,15 @@ def pre_inference(data):
 
     """
     logger_pred.info("Preprocessing...")
+    
+    # first scaling
+    data_scaled = scaler.transform(data)
+    
+    # we assume no null, so we need only to add two columns with zero
+    # this is the matrix with right rows and two cols
+    z = np.zeros((data_scaled.shape[0],2))
+    
+    data = np.concatenate((data_scaled, z), axis=1)
     
     return data
 
@@ -99,14 +118,14 @@ def predict(data, model=load_model()):
         Format: {'prediction': output from model.predict method}
 
     """
+    global scaler
+    
     # model contains the model and the scaler
     logger_pred.info("In function predict...")
     
     # some check
     assert model is not None, "Model is not loaded"
-    
-    logger_feat.info('Raw input is:')
-    logger_feat.info(data)
+    assert scaler is not None, "Scaler is not loaded"
     
     x = pd.read_json(io.StringIO(data)).values
     
@@ -119,4 +138,8 @@ def predict(data, model=load_model()):
 
     logger_pred.info("Invoking model......")
     
-    return {'prediction': [0,0,0,0]}
+    # compute predictions (binary, from model)
+    preds = model.predict(x)
+    
+    # post inference not needed
+    return {'prediction': preds}
