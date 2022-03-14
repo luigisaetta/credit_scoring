@@ -1,4 +1,3 @@
-# Model runtime environment
 MODEL_ARTIFACT_VERSION: '3.0'
 MODEL_DEPLOYMENT:
   INFERENCE_CONDA_ENV:
@@ -9,9 +8,9 @@ MODEL_PROVENANCE:
   PROJECT_OCID: ocid1.datascienceproject.oc1.eu-frankfurt-1.amaaaaaangencdyaft37wwplurq4ddl7hsjtbxbool7aoc3ibwnboozjd76q
   TENANCY_OCID: ocid1.tenancy.oc1..aaaaaaaabu5fgingcjq3vc7djuwsdcutdxs4gsws6h4kfoldqpjuggxprgoa
   TRAINING_CODE:
-    ARTIFACT_DIRECTORY: ./model-files
+    ARTIFACT_DIRECTORY: /home/datascience/credit_scoring/model-files
     GIT_BRANCH: main
-    GIT_COMMIT: c366b6f12966c63d76678675dc3218b9537e7037
+    GIT_COMMIT: f642f176f02cdbef52ffd5abc65ccbc660dd9f93
     GIT_REMOTE: https://github.com/luigisaetta/credit_scoring.git
   TRAINING_COMPARTMENT_OCID: ocid1.compartment.oc1..aaaaaaaag2cpni5qj6li5ny6ehuahhepbpveopobooayqfeudqygdtfe6h3a
   TRAINING_CONDA_ENV:

@@ -141,5 +141,8 @@ def predict(data, model=load_model()):
     # compute predictions (binary, from model)
     preds = model.predict(x)
     
+    # to avoid not JSON serialiable erro (np.array is not)
+    preds = preds.tolist()
+    
     # post inference not needed
     return {'prediction': preds}
