@@ -6,6 +6,9 @@ import os
 import random as rn
 import tensorflow as tf
 
+# to encode categoricals
+from sklearn.preprocessing import LabelEncoder
+
 # plt hist of numerical features
 def show_dist(df, col, bins, kde=False):
     # plt.title(col)
@@ -99,3 +102,42 @@ def split_train_valid(df, predictor_field, batch_size):
     ds_valid = df_to_dataset(df_valid, predictor_field,  batch_size=batch_size)
     
     return ds_train, ds_valid
+
+#
+# functions for categorical encoding
+#
+
+# first train label encoder
+
+def train_encoders(df, to_code_list):
+    le_list = []
+
+    for col in to_code_list:
+        print(f"train for coding: {col} ")
+
+        le = LabelEncoder()
+        le.fit(df[col])
+
+        le_list.append(le)
+
+    print()
+
+    return le_list
+
+
+# then use it
+def apply_encoders(df, le_list, to_code_list):
+
+    for i, col in enumerate(to_code_list):
+        print(f"Coding: {col} ")
+
+        le = le_list[i]
+
+        df[col] = le.transform(df[col])
+
+    # special treatment for windspeed
+    # windpeed actually is integer badly rounded !!
+    # print('Coding: windspeed')
+    # df['windspeed'] = np.round(df['windspeed'].values).astype(int)
+
+    return df
