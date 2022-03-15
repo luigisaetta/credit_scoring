@@ -10,7 +10,7 @@ MODEL_PROVENANCE:
   TRAINING_CODE:
     ARTIFACT_DIRECTORY: /home/datascience/credit_scoring/model-files
     GIT_BRANCH: main
-    GIT_COMMIT: f642f176f02cdbef52ffd5abc65ccbc660dd9f93
+    GIT_COMMIT: 05796704de87dbb72989660366a09e77b81bf870
     GIT_REMOTE: https://github.com/luigisaetta/credit_scoring.git
   TRAINING_COMPARTMENT_OCID: ocid1.compartment.oc1..aaaaaaaag2cpni5qj6li5ny6ehuahhepbpveopobooayqfeudqygdtfe6h3a
   TRAINING_CONDA_ENV:
