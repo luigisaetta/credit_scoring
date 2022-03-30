@@ -8,6 +8,7 @@ import tensorflow as tf
 
 # to encode categoricals
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 # plt hist of numerical features
 def show_dist(df, col, bins, kde=False):
@@ -141,3 +142,13 @@ def apply_encoders(df, le_list, to_code_list):
     # df['windspeed'] = np.round(df['windspeed'].values).astype(int)
 
     return df
+
+#
+# easy plot of the confusion matrix
+#
+def plot_cm(model, x_test, y_test):
+    y_pred_labels = model.predict(x_test)
+    cm = confusion_matrix(y_test, y_pred_labels)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+    disp.plot();
+    
